@@ -1,7 +1,10 @@
 function net = cnnff(net, x)
     n = numel(net.layers);
     net.layers{1}.a{1} = x;
-    inputmaps = 1;
+    inputmaps = net.inputmaps;
+    for in = 1:inputmaps
+	net.layers{1}.a{in} = squeeze(x(:,:,in,:));
+    end
 
     for l = 2 : n   %  for each layer
         if strcmp(net.layers{l}.type, 'c')
@@ -11,6 +14,8 @@ function net = cnnff(net, x)
                 z = zeros(size(net.layers{l - 1}.a{1}) - [net.layers{l}.kernelsize - 1 net.layers{l}.kernelsize - 1 0]);
                 for i = 1 : inputmaps   %  for each input map
                     %  convolve with corresponding kernel and add to temp output map
+%		    display(size(net.layers{l-1}.a{i}));
+%		    display(size(net.layers{l}.k{i}{j}));
                     z = z + convn(net.layers{l - 1}.a{i}, net.layers{l}.k{i}{j}, 'valid');
                 end
                 %  add bias, pass through nonlinearity
@@ -35,5 +40,7 @@ function net = cnnff(net, x)
     end
     %  feedforward into output perceptrons
     net.o = sigm(net.ffW * net.fv + repmat(net.ffb, 1, size(net.fv, 2)));
-
+%    display(size(net.o));
+%    display(size(net.layers{2}.a{1}));
+%    display(size(net.layers{3}.a{1}));
 end

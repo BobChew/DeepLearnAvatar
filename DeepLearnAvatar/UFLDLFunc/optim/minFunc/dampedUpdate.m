@@ -21,7 +21,7 @@ sBs = s'*Bs;
 eta = .02;
 if ys < eta*sBs
     if debug
-        fprintf('Damped Update\n');
+        printf('Damped Update\n');
     end
     theta = min(max(0,((1-eta)*sBs)/(sBs - ys)),1);
     y = theta*y + (1-theta)*Bs;

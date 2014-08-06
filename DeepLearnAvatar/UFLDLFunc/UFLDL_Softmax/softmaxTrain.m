@@ -1,4 +1,4 @@
-function [softmaxModel] = softmaxTrain(theta,inputSize, numClasses, lambda, inputData, labels, func,numiter)
+function [softmaxModel] = softmaxTrain(theta, inputSize, numClasses, lambda, inputData, labels, func,numiter)
 %softmaxTrain Train a softmax model with the given parameters on the given
 % data. Returns softmaxOptTheta, a vector containing the trained parameters
 % for the model.
@@ -45,10 +45,10 @@ printf('Training...\n');
                                    inputData, labels), ...
                            theta, func, numiter);
 
-
+%display(size(softmaxOptTheta));
 % Fold softmaxOptTheta into a nicer format
 %softmaxModel.optTheta = reshape(softmaxOptTheta, numClasses, inputSize);
-softmaxModel.optTheta = reshape(softmaxOptTheta, numClasses, inputSize+1);
+softmaxModel.optTheta = reshape(softmaxOptTheta, numClasses, inputSize);
 softmaxModel.inputSize = inputSize;
 softmaxModel.numClasses = numClasses;
                           

@@ -29,9 +29,7 @@ function nn = nnbp(nn)
         if i+1==n % in this case in d{n} there is not the bias term to be removed            
             d{i} = (d{i + 1} * nn.W{i} + sparsityError) .* d_act; % Bishop (5.56)
         else % in this case in d{i} the bias term has to be removed
-%            d{i} = (d{i + 1}(:,2:end) * nn.W{i} + sparsityError) .* d_act;
-%	    d{i} = (nn.a{i} - nn.a{1}) .* d_act;
-	    d{i} = nn.e .* d_act;
+            d{i} = (d{i + 1}(:,2:end) * nn.W{i} + sparsityError) .* d_act;
         end
         
         if(nn.dropoutFraction>0)

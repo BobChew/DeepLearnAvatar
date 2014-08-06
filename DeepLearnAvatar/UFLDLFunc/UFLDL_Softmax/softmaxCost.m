@@ -9,10 +9,10 @@ function [cost, grad] = softmaxCost(theta, numClasses, inputSize, lambda, data, 
 %
 
 % Unroll the parameters from theta
-%theta = reshape(theta, numClasses, inputSize);
-theta = reshape(theta, numClasses, inputSize+1);
-theta = [theta(:,end) theta(:,1:inputSize)];
-data = [ones(1, size(data,2)); data];
+theta = reshape(theta, numClasses, inputSize);
+%theta = reshape(theta, numClasses, inputSize+1);
+%theta = [theta(:,end) theta(:,1:inputSize)];
+%data = [ones(1, size(data,2)); data];
 
 numCases = size(data, 2);
 
@@ -35,6 +35,7 @@ cost = -1/numCases * groundTruth(:)' * log(p(:)) + lambda/2 * sum(theta(:) .^ 2)
 thetagrad = -1/numCases * (groundTruth - p) * data' + lambda * theta;
 
 %display(M(1:5,1:5));
+%display(data(1:5,1:5));
 %display(size(theta));
 %display(theta(1:5,end));
 %display(theta(1:5,1:5));

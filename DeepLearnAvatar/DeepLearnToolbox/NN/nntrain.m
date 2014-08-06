@@ -7,7 +7,7 @@ function [nn, L]  = nntrain(nn, train_x, train_y, opts, val_x, val_y)
 % squared error for each training minibatch.
 
 assert(isfloat(train_x), 'train_x must be a float');
-assert(nargin == 4 || nargin == 6,'number ofinput arguments must be 4 or 6')
+%assert(nargin == 4 || nargin == 6,'number ofinput arguments must be 4 or 6')
 
 loss.train.e               = [];
 loss.train.e_frac          = [];
@@ -53,20 +53,26 @@ for i = 1 : numepochs
         nn = nnff(nn, batch_x, batch_y);
         nn = nnbp(nn);
 
+%	display(batch_x(1:5,1:5));
 %	display(nn.a{1}(1:5,1:5));
 %	display(size(nn.W{1}));
 %	display(nn.W{1}(1:5,1:5));
 %	display((nn.a{1}*nn.W{1}')(1:5,1:5));
 %	display(nn.a{2}(1:5,1:5)');
 %	display(nn.a{3}(1:5,1:5)');
-%	display(nn.dW{1});
+%	display(nn.dW{1}(1:5,1:5));
 %	display(nn.dW{2});
         nn = nnapplygrads(nn);
 
         if i == 1
-	dW_r1 = nn.dW{i} + nn.weightPenaltyL2 * nn.W{i};
-        csvwrite('gradient_TB_r1.csv', dW_r1);
+	nn.dW_r1 = nn.dW{1} + nn.weightPenaltyL2 * nn.W{i};
+%	out_name = [flag '_gradient_TB_r1.csv'];
+%        csvwrite(out_name, dW_r1);
         end
+	for j = 1:(nn.n - 1)
+		nn.gradient{i}{j} = nn.dW_reg{j};
+	end
+
 %	display(nn.dW{1});
 %	display(nn.dW{2});	
         

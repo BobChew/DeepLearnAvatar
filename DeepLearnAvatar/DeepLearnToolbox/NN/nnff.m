@@ -8,6 +8,7 @@ function nn = nnff(nn, x, y)
     
     x = [ones(m,1) x];
     nn.a{1} = x;
+%    display(x(1:5,1:5));
 
     %feedforward pass
     for i = 2 : n-1

@@ -273,18 +273,18 @@ if numDiff && method ~= TENSOR
     if method ~= NEWTON
         if debug
             if useComplex
-                fprintf('Using complex differentials for gradient computation\n');
+                printf('Using complex differentials for gradient computation\n');
             else
-                fprintf('Using finite differences for gradient computation\n');
+                printf('Using finite differences for gradient computation\n');
             end
         end
         funObj = @autoGrad;
     else
         if debug
             if useComplex
-                fprintf('Using complex differentials for gradient computation\n');
+                printf('Using complex differentials for gradient computation\n');
             else
-                fprintf('Using finite differences for gradient computation\n');
+                printf('Using finite differences for gradient computation\n');
             end
         end
         funObj = @autoHess;
@@ -292,7 +292,7 @@ if numDiff && method ~= TENSOR
 
     if method == NEWTON0 && useComplex == 1
         if debug
-            fprintf('Turning off the use of complex differentials\n');
+            printf('Turning off the use of complex differentials\n');
         end
         useComplex = 0;
     end
@@ -315,25 +315,25 @@ funEvals = 1;
 
 if strcmp(DerivativeCheck,'on')
     if numDiff
-        fprintf('Can not do derivative checking when numDiff is 1\n');
+        printf('Can not do derivative checking when numDiff is 1\n');
     end
     % Check provided gradient/hessian function using numerical derivatives
-    fprintf('Checking Gradient:\n');
+    printf('Checking Gradient:\n');
     [f2,g2] = autoGrad(x,useComplex,funObj,varargin{:});
 
-    fprintf('Max difference between user and numerical gradient: %f\n',max(abs(g-g2)));
+    printf('Max difference between user and numerical gradient: %f\n',max(abs(g-g2)));
     if max(abs(g-g2)) > 1e-4
-        fprintf('User NumDif:\n');
+        printf('User NumDif:\n');
         [g g2]
         diff = abs(g-g2)
         pause;
     end
 
     if method >= NEWTON
-        fprintf('Check Hessian:\n');
+        printf('Check Hessian:\n');
         [f2,g2,H2] = autoHess(x,useComplex,funObj,varargin{:});
 
-        fprintf('Max difference between user and numerical hessian: %f\n',max(abs(H(:)-H2(:))));
+        printf('Max difference between user and numerical hessian: %f\n',max(abs(H(:)-H2(:))));
         if max(abs(H(:)-H2(:))) > 1e-4
             H
             H2
@@ -345,13 +345,13 @@ end
 
 % Output Log
 if verboseI
-    fprintf('%10s %10s %15s %15s %15s\n','Iteration','FunEvals','Step Length','Function Val','Opt Cond');
+    printf('%10s %10s %15s %15s %15s\n','Iteration','FunEvals','Step Length','Function Val','Opt Cond');
 end
 
 if logfile
     fid = fopen(logfile, 'a');
     if (fid > 0)
-        fprintf(fid, '-- %10s %10s %15s %15s %15s\n','Iteration','FunEvals','Step Length','Function Val','Opt Cond');
+        printf(fid, '-- %10s %10s %15s %15s %15s\n','Iteration','FunEvals','Step Length','Function Val','Opt Cond');
         fclose(fid);
     end
 end
@@ -370,7 +370,7 @@ if sum(abs(g)) <= tolFun
     exitflag=1;
     msg = 'Optimality Condition below TolFun';
     if verbose
-        fprintf('%s\n',msg);
+        printf('%s\n',msg);
     end
     if nargout > 3
         output = struct('iterations',0,'funcCount',1,...
@@ -475,7 +475,7 @@ for i = 1:maxIter
                 % Restart if not a direction of sufficient descent
                 if g'*d > -tolX
                     if debug
-                        fprintf('Restarting CG\n');
+                        printf('Restarting CG\n');
                     end
                     beta = 0;
                     d = -g;
@@ -530,7 +530,7 @@ for i = 1:maxIter
 
                 if g'*d > -tolX
                     if debug
-                        fprintf('Restarting CG\n');
+                        printf('Restarting CG\n');
                     end
                     beta = 0;
                     d = s;
@@ -584,7 +584,7 @@ for i = 1:maxIter
                     else
                         % Scaled Identity
                         if debug
-                            fprintf('Scaling Initial Hessian Approximation\n');
+                            printf('Scaling Initial Hessian Approximation\n');
                         end
                         if qnUpdate <= 1
                             % Use Cholesky of Hessian approximation
@@ -602,7 +602,7 @@ for i = 1:maxIter
                         eta = .02;
                         if y'*s < eta*s'*Bs
                             if debug
-                                fprintf('Damped Update\n');
+                                printf('Damped Update\n');
                             end
                             theta = min(max(0,((1-eta)*s'*Bs)/(s'*Bs - y'*s)),1);
                             y = theta*y + (1-theta)*Bs;
@@ -613,7 +613,7 @@ for i = 1:maxIter
                             R = cholupdate(cholupdate(R,y/sqrt(y'*s)),Bs/sqrt(s'*Bs),'-');
                         else
                             if debug
-                                fprintf('Skipping Update\n');
+                                printf('Skipping Update\n');
                             end
                         end
                     end
@@ -625,13 +625,13 @@ for i = 1:maxIter
                         R = cholupdate(R,-ymBs/sqrt(ymBs'*s),'-');
                     else
                         if debug
-                            fprintf('SR1 not positive-definite, doing BFGS Update\n');
+                            printf('SR1 not positive-definite, doing BFGS Update\n');
                         end
                         if Damped
                             eta = .02;
                             if y'*s < eta*s'*Bs
                                 if debug
-                                    fprintf('Damped Update\n');
+                                    printf('Damped Update\n');
                                 end
                                 theta = min(max(0,((1-eta)*s'*Bs)/(s'*Bs - y'*s)),1);
                                 y = theta*y + (1-theta)*Bs;
@@ -642,7 +642,7 @@ for i = 1:maxIter
                                 R = cholupdate(cholupdate(R,y/sqrt(y'*s)),Bs/sqrt(s'*Bs),'-');
                             else
                                 if debug
-                                    fprintf('Skipping Update\n');
+                                    printf('Skipping Update\n');
                                 end
                             end
                         end
@@ -749,14 +749,14 @@ for i = 1:maxIter
 
             funEvals = funEvals+cgIter;
             if debug
-                fprintf('newtonCG stopped on iteration %d w/ residual %.5e\n',cgIter,cgRes);
+                printf('newtonCG stopped on iteration %d w/ residual %.5e\n',cgIter,cgRes);
 
             end
 
             if useNegCurv
                 if ~isempty(negCurv)
                     %if debug
-                    fprintf('Using negative curvature direction\n');
+                    printf('Using negative curvature direction\n');
                     %end
                     d = negCurv/norm(negCurv);
                     d = d/sum(abs(g));
@@ -780,7 +780,7 @@ for i = 1:maxIter
                         % minimum eigenvalue, and solve with QR
                         % (expensive, we don't want to do this very much)
                         if debug
-                            fprintf('Adjusting Hessian\n');
+                            printf('Adjusting Hessian\n');
                         end
                         H = H + eye(length(g)) * max(0,1e-12 - min(real(eig(H))));
                         d = -H\g;
@@ -830,7 +830,7 @@ for i = 1:maxIter
                         d = -R\(R'\g);
                     else
                         if debug
-                            fprintf('Taking Direction of Negative Curvature\n');
+                            printf('Taking Direction of Negative Curvature\n');
                         end
                         [V,D] = eig(H);
                         u = V(:,1);
@@ -900,7 +900,7 @@ for i = 1:maxIter
                     [d,cgIter,cgRes] = conjGrad(H,-g,cgForce,cgMaxIter,debug,precondFunc,precondArgs,HvFunc,{x,varargin{:}});
                 end
                 if debug
-                    fprintf('CG stopped after %d iterations w/ residual %.5e\n',cgIter,cgRes);
+                    printf('CG stopped after %d iterations w/ residual %.5e\n',cgIter,cgRes);
                     %funEvals = funEvals + cgIter;
                 end
             end
@@ -922,7 +922,7 @@ for i = 1:maxIter
 
             if any(abs(d) > 1e5) || all(abs(d) < 1e-5) || g'*d > -tolX
                 if debug
-                    fprintf('Using 2nd-Order Step\n');
+                    printf('Using 2nd-Order Step\n');
                 end
                 [V,D] = eig((H+H')/2);
                 D = diag(D);
@@ -930,13 +930,13 @@ for i = 1:maxIter
                 d = -V*((V'*g)./D);
             else
                 if debug
-                    fprintf('Using 3rd-Order Step\n');
+                    printf('Using 3rd-Order Step\n');
                 end
             end
     end
 
     if ~isLegal(d)
-        fprintf('Step direction is illegal!\n');
+        printf('Step direction is illegal!\n');
         pause;
         return
     end
@@ -1069,13 +1069,13 @@ for i = 1:maxIter
 
     % Output iteration information
     if verboseI
-        fprintf('%10d %10d %15.5e %15.5e %15.5e\n',i,funEvals*funEvalMultiplier,t,f,sum(abs(g)));
+        printf('%10d %10d %15.5e %15.5e %15.5e\n',i,funEvals*funEvalMultiplier,t,f,sum(abs(g)));
     end
 
     if logfile
         fid = fopen(logfile, 'a');
         if (fid > 0)
-            fprintf(fid, '-- %10d %10d %15.5e %15.5e %15.5e\n',i,funEvals*funEvalMultiplier,t,f,sum(abs(g)));
+            printf(fid, '-- %10d %10d %15.5e %15.5e %15.5e\n',i,funEvals*funEvalMultiplier,t,f,sum(abs(g)));
             fclose(fid);
         end
     end
@@ -1129,7 +1129,7 @@ for i = 1:maxIter
 end
 
 if verbose
-    fprintf('%s\n',msg);
+    printf('%s\n',msg);
 end
 if nargout > 3
     output = struct('iterations',i,'funcCount',funEvals*funEvalMultiplier,...

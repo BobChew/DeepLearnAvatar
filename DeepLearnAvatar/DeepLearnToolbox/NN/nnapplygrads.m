@@ -11,7 +11,8 @@ function nn = nnapplygrads(nn)
         else
             dW = nn.dW{i};
         end
-       
+
+	nn.dW_reg{i} = dW;       
 %	display(nn.dW{2});
 %	display((nn.dW{1} + nn.weightPenaltyL2 * nn.W{1})(1:5,1:5));
 %	if(i==2) display(dW); end; 

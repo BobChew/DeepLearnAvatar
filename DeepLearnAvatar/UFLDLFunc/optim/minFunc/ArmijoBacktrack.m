@@ -39,25 +39,25 @@ while f_new > fr + c1*t*gtd || ~isLegal(f_new)
     if LS == 0 || ~isLegal(f_new)
         % Backtrack w/ fixed backtracking rate
         if debug
-            fprintf('Fixed BT\n');
+            printf('Fixed BT\n');
         end
         t = 0.5*t;
     elseif LS == 2 && isLegal(g_new)
         % Backtracking w/ cubic interpolation w/ derivative
         if debug
-            fprintf('Grad-Cubic BT\n');
+            printf('Grad-Cubic BT\n');
         end
         t = polyinterp([0 f gtd; t f_new g_new'*d],doPlot);
     elseif funEvals < 2 || ~isLegal(f_prev)
         % Backtracking w/ quadratic interpolation (no derivative at new point)
         if debug
-            fprintf('Quad BT\n');
+            printf('Quad BT\n');
         end
         t = polyinterp([0 f gtd; t f_new sqrt(-1)],doPlot);
     else%if LS == 1
         % Backtracking w/ cubic interpolation (no derivatives at new points)
         if debug
-            fprintf('Cubic BT\n');
+            printf('Cubic BT\n');
         end
         t = polyinterp([0 f gtd; t f_new sqrt(-1); t_prev f_prev sqrt(-1)],doPlot);
     end
@@ -66,12 +66,12 @@ while f_new > fr + c1*t*gtd || ~isLegal(f_new)
 
     if t < temp*1e-3
         if debug
-            fprintf('Interpolated Value Too Small, Adjusting\n');
+            printf('Interpolated Value Too Small, Adjusting\n');
         end
         t = temp*1e-3;
     elseif t > temp*0.6
         if debug
-            fprintf('Interpolated Value Too Large, Adjusting\n');
+            printf('Interpolated Value Too Large, Adjusting\n');
         end
         t = temp*0.6;
     end
@@ -88,7 +88,7 @@ while f_new > fr + c1*t*gtd || ~isLegal(f_new)
     % Check whether step size has become too small
     if sum(abs(t*d)) <= tolX
         if debug
-            fprintf('Backtracking Line Search Failed\n');
+            printf('Backtracking Line Search Failed\n');
         end
         t = 0;
         f_new = f;

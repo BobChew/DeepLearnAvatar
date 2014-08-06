@@ -32,6 +32,6 @@ function nn = nnsetup(architecture)
         % average activations (for use with sparsity)
         nn.p{i}     = zeros(1, nn.W{i-1}(:,2:end));   
     end
-    initial_theta = [initial_W;initial_b];
-    csvwrite('initialtheta.csv', initial_theta);
+    nn.initial_theta = [initial_W;initial_b];
+%    disp(nn.initial_theta(1:10));
 end

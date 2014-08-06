@@ -16,6 +16,6 @@ if ys > 1e-10
     Hdiag = ys/(y'*y);
 else
     if debug
-        fprintf('Skipping Update\n');
+        printf('Skipping Update\n');
     end
 end

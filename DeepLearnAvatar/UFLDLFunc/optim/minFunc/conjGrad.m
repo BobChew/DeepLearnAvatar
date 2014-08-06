@@ -35,7 +35,7 @@ while res > optTol & k < maxIter & ~done
     % Check for negative Curvature
     if pAp <= 1e-16
         if verbose
-            fprintf('Negative Curvature Detected!\n');
+            printf('Negative Curvature Detected!\n');
         end
         
         if nargout == 4
@@ -47,12 +47,12 @@ while res > optTol & k < maxIter & ~done
         
         if k == 0
             if verbose
-                fprintf('First-Iter, Proceeding...\n');
+                printf('First-Iter, Proceeding...\n');
             end
             done = 1;
         else
             if verbose
-                fprintf('Stopping\n');
+                printf('Stopping\n');
             end
             break;
         end

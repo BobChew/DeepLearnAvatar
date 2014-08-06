@@ -52,7 +52,7 @@ while LSiter < maxLS
     if ~isLegal(f_new) || ~isLegal(g_new)
         if 0
             if debug
-                fprintf('Extrapolated into illegal region, Bisecting\n');
+                printf('Extrapolated into illegal region, Bisecting\n');
             end
             t = (t + t_prev)/2;
             if ~saveHessianComp && nargout == 5
@@ -66,7 +66,7 @@ while LSiter < maxLS
             continue;
         else
             if debug
-                fprintf('Extrapolated into illegal region, switching to Armijo line-search\n');
+                printf('Extrapolated into illegal region, switching to Armijo line-search\n');
             end
             t = (t + t_prev)/2;
             % Do Armijo
@@ -108,12 +108,12 @@ while LSiter < maxLS
     maxStep = t*10;
     if LS == 3
         if debug
-            fprintf('Extending Braket\n');
+            printf('Extending Braket\n');
         end
         t = maxStep;
     elseif LS ==4
         if debug
-            fprintf('Cubic Extrapolation\n');
+            printf('Cubic Extrapolation\n');
         end
         t = polyinterp([temp f_prev gtd_prev; t f_new gtd_new],doPlot,minStep,maxStep);
     else
@@ -156,12 +156,12 @@ while ~done && LSiter < maxLS
     % Compute new trial value
     if LS == 3 || ~isLegal(bracketFval) || ~isLegal(bracketGval)
         if debug
-            fprintf('Bisecting\n');
+            printf('Bisecting\n');
         end
         t = mean(bracket);
     elseif LS == 4
         if debug
-            fprintf('Grad-Cubic Interpolation\n');
+            printf('Grad-Cubic Interpolation\n');
         end
         t = polyinterp([bracket(1) bracketFval(1) bracketGval(:,1)'*d
             bracket(2) bracketFval(2) bracketGval(:,2)'*d],doPlot);
@@ -180,11 +180,11 @@ while ~done && LSiter < maxLS
     % Test that we are making sufficient progress
     if min(max(bracket)-t,t-min(bracket))/(max(bracket)-min(bracket)) < 0.1
         if debug
-            fprintf('Interpolation close to boundary');
+            printf('Interpolation close to boundary');
         end
         if insufProgress || t>=max(bracket) || t <= min(bracket)
             if debug
-                fprintf(', Evaluating at 0.1 away from boundary\n');
+                printf(', Evaluating at 0.1 away from boundary\n');
             end
             if abs(t-max(bracket)) < abs(t-min(bracket))
                 t = max(bracket)-0.1*(max(bracket)-min(bracket));
@@ -194,7 +194,7 @@ while ~done && LSiter < maxLS
             insufProgress = 0;
         else
             if debug
-                fprintf('\n');
+                printf('\n');
             end
             insufProgress = 1;
         end
@@ -230,7 +230,7 @@ while ~done && LSiter < maxLS
             bracketGval(:,HIpos) = bracketGval(:,LOpos);
             if LS == 5
                 if debug
-                    fprintf('LO Pos is being removed!\n');
+                    printf('LO Pos is being removed!\n');
                 end
                 LOposRemoved = 1;
                 oldLOval = bracket(LOpos);
@@ -247,7 +247,7 @@ while ~done && LSiter < maxLS
 
     if ~done && abs((bracket(1)-bracket(2))*gtd_new) < tolX
         if debug
-            fprintf('Line Search can not make further progress\n');
+            printf('Line Search can not make further progress\n');
         end
         break;
     end
@@ -257,7 +257,7 @@ end
 %%
 if LSiter == maxLS
     if debug
-        fprintf('Line Search Exceeded Maximum Line Search Iterations\n');
+        printf('Line Search Exceeded Maximum Line Search Iterations\n');
     end
 end
 
@@ -283,12 +283,12 @@ alpha_c = polyinterp([x0 f0 g0; x1 f1 g1],doPlot,minStep,maxStep);
 alpha_s = polyinterp([x0 f0 g0; x1 sqrt(-1) g1],doPlot,minStep,maxStep);
 if alpha_c > minStep && abs(alpha_c - x1) < abs(alpha_s - x1)
     if debug
-        fprintf('Cubic Extrapolation\n');
+        printf('Cubic Extrapolation\n');
     end
     t = alpha_c;
 else
     if debug
-        fprintf('Secant Extrapolation\n');
+        printf('Secant Extrapolation\n');
     end
     t = alpha_s;
 end
@@ -310,12 +310,12 @@ if bracketFval(Tpos) > oldLOFval
         bracket(Tpos) bracketFval(Tpos) sqrt(-1)],doPlot);
     if abs(alpha_c - oldLOval) < abs(alpha_q - oldLOval)
         if debug
-            fprintf('Cubic Interpolation\n');
+            printf('Cubic Interpolation\n');
         end
         t = alpha_c;
     else
         if debug
-            fprintf('Mixed Quad/Cubic Interpolation\n');
+            printf('Mixed Quad/Cubic Interpolation\n');
         end
         t = (alpha_q + alpha_c)/2;
     end
@@ -326,12 +326,12 @@ elseif gtdT'*oldLOgtd < 0
         bracket(Tpos) sqrt(-1) gtdT],doPlot);
     if abs(alpha_c - bracket(Tpos)) >= abs(alpha_s - bracket(Tpos))
         if debug
-            fprintf('Cubic Interpolation\n');
+            printf('Cubic Interpolation\n');
         end
         t = alpha_c;
     else
         if debug
-            fprintf('Quad Interpolation\n');
+            printf('Quad Interpolation\n');
         end
         t = alpha_s;
     end
@@ -345,18 +345,18 @@ elseif abs(gtdT) <= abs(oldLOgtd)
     if alpha_c > min(bracket) && alpha_c < max(bracket)
         if abs(alpha_c - bracket(Tpos)) < abs(alpha_s - bracket(Tpos))
             if debug
-                fprintf('Bounded Cubic Extrapolation\n');
+                printf('Bounded Cubic Extrapolation\n');
             end
             t = alpha_c;
         else
             if debug
-                fprintf('Bounded Secant Extrapolation\n');
+                printf('Bounded Secant Extrapolation\n');
             end
             t = alpha_s;
         end
     else
         if debug
-            fprintf('Bounded Secant Extrapolation\n');
+            printf('Bounded Secant Extrapolation\n');
         end
         t = alpha_s;
     end

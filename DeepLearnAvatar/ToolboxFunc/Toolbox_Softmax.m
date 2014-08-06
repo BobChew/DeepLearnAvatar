@@ -1,4 +1,4 @@
-function [acc result] = Toolbox_Softmax(train_data,train_labels,test_data,test_labels,func,learning_rate,num_iter,num_labels,weight_penalty)
+function [nn acc result] = Toolbox_Softmax(train_data,train_labels,test_data,test_labels,func,learning_rate,num_iter,num_labels,weight_penalty,initialize,initial_theta)
 
 printf('Running Softmax using DeepLearnToolbox...\n');
 
@@ -10,9 +10,11 @@ test_data = normalize(test_data, mu, sigma);
 %test_labels(test_labels==0) = 10;
 
 printf('Setup Neural Network...\n');
-rand('state',0)
 [num_trains, visibleSize] = size(train_data);
 nn = nnsetup([visibleSize, num_labels]);
+if (initialize == 1)
+	nn.W{1} = initial_theta;
+end
 
 nn.activation_function = 'sigm';    %  Sigmoid activation function
 nn.learningRate = learning_rate;

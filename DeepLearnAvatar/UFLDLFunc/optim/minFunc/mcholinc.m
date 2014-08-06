@@ -8,7 +8,7 @@ if min(diag(H)) > 1e-12
     tau = 0;
 else
     if verbose
-        fprintf('Small Value on Diagonal, Adjusting Hessian\n');
+        printf('Small Value on Diagonal, Adjusting Hessian\n');
     end
     tau = max(beta/2,1e-12);
 end
@@ -18,7 +18,7 @@ while 1
         break;
     else
         if verbose
-            fprintf('Cholesky Failed, Adjusting Hessian\n');
+            printf('Cholesky Failed, Adjusting Hessian\n');
         end
         tau = max(2*tau,beta/2);
     end
